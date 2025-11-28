@@ -3,6 +3,7 @@ import dotenv from "dotenv";
 import cookieParser from "cookie-parser";
 import cors from "cors";
 import path from "path";
+import fs from "fs";
 import { connectDB } from "./lib/db.js";
 import { app, server } from "./lib/socket.js";
 
@@ -31,7 +32,15 @@ const routesModule = await import('./routes/index.js');
 app.use('/api', routesModule.default);
 
 if (process.env.NODE_ENV === "production") {
-  app.use(express.static(path.join(__dirname, "../frontend/dist")));
+  const staticDir = path.join(__dirname, "../frontend/dist");
+  console.log("NODE_ENV=production -> attempting to serve static from:", staticDir);
+  try {
+    console.log("staticDir exists:", fs.existsSync(staticDir));
+  } catch (err) {
+    console.log("Error checking staticDir existence:", err && err.message);
+  }
+
+  app.use(express.static(staticDir));
 
   app.get("*", (req, res) => {
     res.sendFile(path.join(__dirname, "../frontend", "dist", "index.html"));
