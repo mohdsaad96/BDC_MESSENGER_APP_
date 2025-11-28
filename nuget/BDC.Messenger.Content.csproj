@@ -1,0 +1,26 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net7.0</TargetFramework>
+    <PackageId>BDC.Messenger.Content</PackageId>
+    <Version>1.0.0</Version>
+    <Authors>MohdSaad</Authors>
+    <Description>BDC Messenger content package (frontend + backend scaffolding)</Description>
+    <PackageOutputPath>../artifacts</PackageOutputPath>
+    <IncludeSymbols>false</IncludeSymbols>
+    <NoBuild>true</NoBuild>
+  </PropertyGroup>
+  <ItemGroup>
+    <None Include="..\frontend\**\*">
+      <Pack>true</Pack>
+      <PackagePath>content/frontend/%(RecursiveDir)</PackagePath>
+    </None>
+    <None Include="..\backend\**\*">
+      <Pack>true</Pack>
+      <PackagePath>content/backend/%(RecursiveDir)</PackagePath>
+    </None>
+    <None Include="..\README.md">
+      <Pack>true</Pack>
+      <PackagePath>content/</PackagePath>
+    </None>
+  </ItemGroup>
+</Project>
