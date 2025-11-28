@@ -1,0 +1,30 @@
+name: Publish NuGet
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  pack-and-publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '7.0.x'
+
+      - name: Pack NuGet package
+        run: |
+          dotnet --info
+          dotnet pack nuget/BDC.Messenger.Content.csproj -c Release -o artifacts --no-build
+
+      - name: Publish to NuGet.org
+        if: success()
+        env:
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
+        run: |
+          ls artifacts || true
+          dotnet nuget push "artifacts/*.nupkg" -s https://api.nuget.org/v3/index.json -k $NUGET_API_KEY --skip-duplicate
